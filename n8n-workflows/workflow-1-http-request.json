@@ -1,0 +1,55 @@
+{
+  "name": "My First workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "20ea7fa5-883d-49f0-b20e-ca9e1dfaaeba",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "62094031-0aeb-45b7-9cd0-30908f37877d",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "19cd3f27-1914-4805-ab37-0785d3a1b809",
+  "meta": {
+    "instanceId": "6dc5e365ba678fd9fbc79bceac9b1cfcfeefb0c1b7b697f947b95acff13fb863"
+  },
+  "id": "yC9JRwkPbFRS4hGX",
+  "tags": []
+}
