@@ -1,0 +1,169 @@
+{
+  "name": "My workflow 6",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "customer-support",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6ed7e68a-5239-4da0-bd4e-7374345fa1ca",
+      "name": "Webhook",
+      "webhookId": "cfcfd164-0cde-427f-803d-c6bbc8c99a8c"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.question }}",
+        "options": {
+          "systemMessage": "\"You are a helpful customer support agent. ALWAYS respond in the following format so my system can read it: CATEGORY: [billing/technical/general] SENTIMENT: [positive/neutral/negative] ANSWER: [Your helpful response here]\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2b1d9339-d39c-40bd-a739-c30f760bfbf8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-3.2-3b-instruct:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "4a2548f9-0da2-449f-ae4b-21a318c3b3f1",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TWaxTPeNi2vF3ucj",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e125f56-2835-4730-9e20-d8548526c56b",
+              "name": "answer",
+              "value": "={{ $node[\"AI Agent\"].json[\"output\"].split('ANSWER:')[1].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "bbdf6823-c346-4b5a-adc0-4fb3c892c4c9",
+              "name": "=category",
+              "value": "={{ $node[\"AI Agent\"].json[\"output\"].split('CATEGORY:')[1].split('SENTIMENT:')[0].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "b2cd3f47-f286-480a-a707-71f1156188c1",
+              "name": "=sentiment",
+              "value": "={{ $node[\"AI Agent\"].json[\"output\"].split('SENTIMENT:')[1].split('ANSWER:')[0].trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "fe447fc0-3f6b-4df4-a167-bbc52d297b9c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "dedc2180-29c1-4b4c-a6e3-c51e94027932",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "1f399e5c-62f8-41e7-a92c-e53f5aef5e28",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dc5e365ba678fd9fbc79bceac9b1cfcfeefb0c1b7b697f947b95acff13fb863"
+  },
+  "id": "0eRGWTFkMUXGRI8Xb42E3",
+  "tags": []
+}

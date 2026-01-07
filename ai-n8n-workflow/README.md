@@ -1,0 +1,1 @@
+AI to provide answers and categorize issues.## How to useSend POST request to webhook URL with:{"question": "How do I reset my password?"}## Setup1. Import workflow into n8n2. Add OpenRouter credentials3. Activate workflow
