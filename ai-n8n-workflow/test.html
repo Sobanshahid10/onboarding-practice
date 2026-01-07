@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Customer Support Bot Tester&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 40px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h2 { color: #333; margin-top: 0; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.input-group { display: flex; gap: 10px; margin-bottom: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button { padding: 12px 20px; background: #ff6d5a; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover { background: #e55b4a; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#response { background: #f9f9f9; padding: 15px; border-radius: 6px; border-left: 4px solid #ff6d5a; min-height: 50px; white-space: pre-wrap; color: #444; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.examples { margin-top: 20px; font-size: 0.9em; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.example-btn { background: #eee; border: none; padding: 5px 10px; border-radius: 15px; margin: 3px; cursor: pointer; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.loading { color: #888; font-style: italic; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Smart Support Bot&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Ask a question to test the AI Agent and Google Sheets logging.&lt;/p&gt;</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="input-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="text" id="question" placeholder="Type your question here..."&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button onclick="testBot()"&gt;Send&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="response"&gt;Response will appear here...&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="examples"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;strong&gt;Try these:&lt;/strong&gt;&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="example-btn" onclick="fillInput('How do I reset my password?')"&gt;Reset Password&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="example-btn" onclick="fillInput('What is your refund policy?')"&gt;Refund Policy&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="example-btn" onclick="fillInput('I love this service!')"&gt;Feedback&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function fillInput(text) { document.getElementById('question').value = text; }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>async function testBot() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const questionInput = document.getElementById('question');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const resDiv = document.getElementById('response');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const question = questionInput.value;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!question) return alert("Please enter a question");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>resDiv.innerHTML = '&lt;span class="loading"&gt;Bot is thinking...&lt;/span&gt;';</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const response = await fetch('http://localhost:5678/webhook-test/customer-support', {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>method: 'POST',</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>headers: { 'Content-Type': 'application/json' },</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>body: JSON.stringify({ question: question })</p>
+<p class="p1"><span class="Apple-converted-space">                </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const data = await response.json();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>resDiv.innerText = data.answer || "Success! Check your Google Sheet.";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} catch (error) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>resDiv.innerText = "Error: Could not reach the webhook. Ensure n8n is running.";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.error(error);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>

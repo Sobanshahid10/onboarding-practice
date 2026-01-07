@@ -1,0 +1,99 @@
+{
+  "name": "Webhook workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "10202cd5-2b5e-4a70-9423-074eae8d1643",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "db1a10e8-dd25-41fc-b5ff-6349885bcace",
+      "name": "Webhook",
+      "webhookId": "10202cd5-2b5e-4a70-9423-074eae8d1643"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b547f354-e143-4134-8a3a-715eb8e8da8b",
+              "name": "Soban",
+              "value": "Active",
+              "type": "string"
+            },
+            {
+              "id": "f2f9844b-e362-4373-8fb3-1909736bb0fb",
+              "name": "Haseeb",
+              "value": "Inactive",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "493c68a9-f201-43f6-8a04-10e198f41eda",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2e945254-16e3-4ce5-8762-51e9f119eceb",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "3df3e2f3-8556-4681-8322-84006ebfb3a2",
+  "meta": {
+    "instanceId": "6dc5e365ba678fd9fbc79bceac9b1cfcfeefb0c1b7b697f947b95acff13fb863"
+  },
+  "id": "O5wwBsUs8IAK3JBA",
+  "tags": []
+}
