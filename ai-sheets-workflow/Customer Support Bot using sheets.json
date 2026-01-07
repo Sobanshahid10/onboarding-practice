@@ -1,0 +1,283 @@
+{
+  "name": "Customer Support Bot using sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "customer-support",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8b1e4024-aa54-4090-8de4-44c9290eb21c",
+      "name": "Webhook",
+      "webhookId": "bce2c7a9-9781-47f8-b460-57338fc9ec3d",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-3.2-3b-instruct:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "0a2f27c1-d4c6-4e8e-a44b-264f5de98c37",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TWaxTPeNi2vF3ucj",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1c0e6ce4-dc7f-4904-836d-2af240a67173",
+              "name": "=Timestamp\t",
+              "value": "={{$now.format('YYYY-MM-DD HH:mm:ss')}}",
+              "type": "string"
+            },
+            {
+              "id": "420bd3e9-0436-40b2-b97a-ca1bbe6baeea",
+              "name": "Question",
+              "value": "={{$('Webhook').item.json.body.question}}",
+              "type": "string"
+            },
+            {
+              "id": "34ae0bc6-0a3b-460a-b972-20e458751502",
+              "name": "Answer",
+              "value": "={{$json.output}}",
+              "type": "string"
+            },
+            {
+              "id": "4db6ebe4-f76e-4a6b-ab84-96d31a89367b",
+              "name": "Category",
+              "value": "={{$json.output}}",
+              "type": "string"
+            },
+            {
+              "id": "f01d70e2-a288-4618-89df-ff4aa83397c6",
+              "name": "Sentiment",
+              "value": "={{$json.output}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "e05c75bd-f393-48f4-bf16-2e0574f34c89",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1sI05B9T12Rsukt-h6kmqHGSYAU3P4xgaLh1rSL8Tvb0/",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1sI05B9T12Rsukt-h6kmqHGSYAU3P4xgaLh1rSL8Tvb0/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "{{ $json.Timestamp }}",
+            "Question": "{{ $json.Question }}",
+            "Answer": "{{ $json.Answer }}",
+            "Category": "{{ $json.Category }}",
+            "Sentiment": "{{ $json.Sentiment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Question",
+              "displayName": "Question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Answer",
+              "displayName": "Answer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment",
+              "displayName": "Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "bc3c18b2-4474-42bf-89ec-163b023c44ac",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ktyyUXiojA7SQEJo",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"answer\": \"{{$('Set').item.json.Answer}}\",\n  \"category\": \"{{$('Set').item.json.Category}}\",\n  \"sentiment\": \"{{$('Set').item.json.Sentiment}}\",\n  \"logged\": true\n}\n",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "ffd2f46c-af28-494f-927e-003b83e36288",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "{{$json.query.question}}",
+        "options": {
+          "systemMessage": "=You are a helpful customer support agent. \n\nCustomer Question: {{$json.query.question}}\n\nPlease provide:\n1. A clear, helpful answer to their question\n2. Categorize the issue as one of: billing, technical, general\n3. Determine the sentiment as one of: positive, neutral, negative\n\nFormat your response exactly like this:\nAnswer: [your detailed answer here]\nCategory: [billing/technical/general]\nSentiment: [positive/neutral/negative]\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4bee5be1-ae5b-4727-8869-6176f893ef0d",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "33016a5e-9d99-4d20-8ea0-41a23c902d57",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dc5e365ba678fd9fbc79bceac9b1cfcfeefb0c1b7b697f947b95acff13fb863"
+  },
+  "id": "06db60IBpNXLbUntzAt2Q",
+  "tags": []
+}
