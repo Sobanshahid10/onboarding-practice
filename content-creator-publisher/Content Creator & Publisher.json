@@ -1,0 +1,335 @@
+{
+  "name": "Content Creator & Publisher",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "9059707f-f80a-49d2-b822-49298c206444",
+      "name": "Webhook",
+      "webhookId": "6be9aba9-e9dd-4463-aeb2-37e10eae4b99"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Add AI Agent for Content Generation\n\nClick \"+\" after Webhook\n\nAdd \"AI Agent\" node\n\nSettings:\n\nCredential: Select \"OpenRouter\"\n\nModel: meta-llama/llama-3.2-3b-instruct:free\n\nPrompt:\n\n\n\nCreate engaging social media content for the topic: {{$json.body.topic}}\nPlatform: {{$json.body.platform}}\nGenerate:\n1. A compelling post (max 280 characters for Twitter, 150 words for LinkedIn, 125 characters for Instagram)\n2. 5 relevant hashtags\n3. Best time to post suggestion\nFormat:\nContent: [your post here]\nHashtags: #tag1 #tag2 #tag3 #tag4 #tag5\nBest Time: [time suggestion]",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c50a8a70-9350-415a-961a-177c1e2a27b6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-3.2-3b-instruct:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "d9445372-4995-4033-8d41-7ada463214f1",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "TWaxTPeNi2vF3ucj",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8f381c2-4bed-42b3-8c51-cc09fdc76f71",
+              "name": "Date",
+              "value": "={{ $now.toFormat('yyyy-MM-dd HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "cb7677d6-e82f-4c79-8f8d-0e941cd2c268",
+              "name": "Topic",
+              "value": "={{ $('Webhook').item.json.body.topic }}",
+              "type": "string"
+            },
+            {
+              "id": "cf40a861-8c15-4295-a497-f79682a357cf",
+              "name": "Platform",
+              "value": "={{ $('Webhook').item.json.body.platform }}",
+              "type": "string"
+            },
+            {
+              "id": "9e7db723-a44b-4d7a-b47c-13aa27081890",
+              "name": "Content",
+              "value": "={{ $json.output.split('Hashtags:')[0].replace('Content:', '').trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "c7ecd9d2-af22-4981-ab66-b40d822fc57a",
+              "name": "Hashtags",
+              "value": "={{ $json.output.split('Hashtags:')[1].split('Best Time:')[0].trim() }}",
+              "type": "string"
+            },
+            {
+              "id": "e537e3bb-27a0-4496-bc4b-95f8bf0d7140",
+              "name": "Status",
+              "value": "Draft",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "53717bac-843e-46e6-aa43-5793ff438137",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/11ta1Sx0VjLon9wmiKPa6SB_f-h_3w8VrvhU5IFYei7A/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/11ta1Sx0VjLon9wmiKPa6SB_f-h_3w8VrvhU5IFYei7A/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "{{ $json.Date }}",
+            "Topic": "{{ $json.Topic }}",
+            "Platform": "{{ $json.Platform }}",
+            "Content": "{{ $json.Content }}",
+            "Hashtags": "{{ $json.Hashtags }}",
+            "Status": "{{ $json.Status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hashtags",
+              "displayName": "Hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        768,
+        0
+      ],
+      "id": "44b658c1-a6cb-4fe8-9360-94d2db2ebbe3",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "d4t31onoSkDU56zB",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#content-alerts",
+          "mode": "name"
+        },
+        "text": "🎉 New content created! 📝 Topic: {{$('Set').item.json.Topic}} 📱 Platform: {{$('Set').item.json.Platform}} ✨ Content: {{$('Set').item.json.Content}} 🏷️ Hashtags: {{$('Set').item.json.Hashtags}} ✅ Saved to Content Calendar",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        976,
+        0
+      ],
+      "id": "39cf9200-d5b2-4788-b29f-9b6c0f6e84b8",
+      "name": "Send a message",
+      "webhookId": "0b7b81a4-21a0-4a97-8292-68a193c364b1",
+      "credentials": {
+        "slackApi": {
+          "id": "uvQY31rthWBPubeO",
+          "name": "My Slack Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"Content created successfully\",\n  \"topic\": \"{{$('Set').item.json.Topic}}\",\n  \"platform\": \"{{$('Set').item.json.Platform}}\",\n  \"saved_to_sheets\": true,\n  \"slack_notified\": true\n}\n",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "8b7a5dd6-2949-4a0a-b475-e5fede6d035a",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "aba2b87b-1678-4f2c-94e8-dfd32fe79ba7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6dc5e365ba678fd9fbc79bceac9b1cfcfeefb0c1b7b697f947b95acff13fb863"
+  },
+  "id": "xjjRR9HeORVYlIC1obE9x",
+  "tags": []
+}
