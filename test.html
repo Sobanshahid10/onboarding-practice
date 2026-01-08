@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Creator Control Panel</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; background-color: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; font-size: 24px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, button { width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #FF6D5A; color: white; border: none; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #e55a4a; }
+        #response { padding: 15px; border-radius: 4px; display: none; margin-top: 20px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .example-list { font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🚀 AI Content Creator</h1>
+    <p>Send a topic to your n8n workflow.</p>
+
+    <label for="topic">Content Topic</label>
+    <input type="text" id="topic" placeholder="e.g. Benefits of Remote Work">
+
+    <label for="platform">Target Platform</label>
+    <select id="platform">
+        <option value="Twitter">Twitter</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="Instagram">Instagram</option>
+        <option value="Facebook">Facebook</option>
+    </select>
+
+    <button onclick="sendData()">Generate & Publish Content</button>
+
+    <div id="response"></div>
+
+    <hr>
+    <h3>💡 Example Topics to Try:</h3>
+    <ul class="example-list">
+        <li>The impact of AI on small business</li>
+        <li>Top 5 travel tips for digital nomads</li>
+        <li>Why learning to code is still relevant in 2026</li>
+    </ul>
+</div>
+
+<script>
+    async function sendData() {
+        const topic = document.getElementById('topic').value;
+        const platform = document.getElementById('platform').value;
+        const responseDiv = document.getElementById('response');
+
+        if (!topic) {
+            alert("Please enter a topic!");
+            return;
+        }
+
+        responseDiv.style.display = 'block';
+        responseDiv.innerHTML = "⏳ Processing... Please check n8n.";
+        responseDiv.className = "card";
+
+        try {
+            const response = await fetch('http://localhost:5678/webhook-test/create-content', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic, platform })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                responseDiv.className = "success";
+                responseDiv.innerHTML = `
+                    <strong>✅ Success!</strong><br>
+                    📝 Topic: ${data.topic}<br>
+                    📂 Saved to Google Sheets<br>
+                    💬 Slack Notification Sent!<br>
+                    <a href="https://docs.google.com/spreadsheets/d/11ta1Sx0VjLon9wmiKPa6SB_f-h_3w8VrvhU5IFYei7A/" target="_blank">Open Sheets</a>
+                `;
+            }
+        } catch (error) {
+            responseDiv.style.background = "#f8d7da";
+            responseDiv.innerHTML = "❌ Error: Make sure n8n is running and 'Execute Workflow' is clicked.";
+            console.error(error);
+        }
+    }
+</script>
+
+</body>
+</html>
